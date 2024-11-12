@@ -102,6 +102,11 @@ body{
     font-size: 20px;
     font-weight: 500;
 }
+.v-divider{
+    height: 48px;
+    width: 2px;
+    background-color: #f6f6f6;
+}
 .total-clients{
     text-align: center;
     margin-top: 10px;
