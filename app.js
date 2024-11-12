@@ -5,7 +5,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const server = app.listen(PORT, () => { console.log(`Server running this port: http://localhost:${PORT}`); });
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, {
+    cors: {
+      origin: "*", // Update this to your domain in production
+      methods: ["GET", "POST"]
+    }
+});
+  
 
 app.use(express.static(path.join(__dirname, 'public')));
 
