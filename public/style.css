@@ -65,6 +65,7 @@ body{
     max-width: fit-content;
     list-style: none;
     font-size: 18px;
+    margin: 1rem 0;
 }
 .message-right{
     align-self: flex-end;
@@ -76,7 +77,7 @@ body{
 .message-left > span,
 .message-right > span{
     display: block;
-    font-size: 14px;
+    font-size: 12px;
     font-style: italic;
     margin-top: 5px;
 }
