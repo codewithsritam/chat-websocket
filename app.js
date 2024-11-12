@@ -24,12 +24,6 @@ function onConnected(stream) {
 
     io.emit('total-clients', streamConnected.size);
 
-    stream.on('disconnect', () => {
-        // console.log('Stream disconnect :', stream.id);
-        streamConnected.delete(stream.id);
-        io.emit('total-clients', streamConnected.size);
-    })
-
     stream.on('message', (data) => {
         // console.log(data);
         stream.broadcast.emit('chat-message', data)
@@ -38,5 +32,11 @@ function onConnected(stream) {
     stream.on('typing', (data) => {
         // console.log(data);
         stream.broadcast.emit('typing', data)
+    })
+
+    stream.on('disconnect', () => {
+        // console.log('Stream disconnect :', stream.id);
+        streamConnected.delete(stream.id);
+        io.emit('total-clients', streamConnected.size);
     })
 }
