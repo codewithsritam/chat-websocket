@@ -35,12 +35,15 @@
         <form class="message-form" id="message-form">
             <input type="text" name="message" id="message-input" class="message-input" placeholder="Message">
             <div class="v-divider"></div>
-            <button class="send-button" id="send-button">
+            <button type="submit" class="send-button">
                 send
                 <i class="fa-solid fa-paper-plane"></i>
             </button>
         </form>
     </div>
     <h3 class="total-clients" id="total-clients">Total clients: 2</h3>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

@@ -4,8 +4,23 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const server = app.listen(PORT, () => { console.log(`Server running this port: http://localhost:${PORT}`); });
+const io = require("socket.io")(server);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(PORT, () => {
-    console.log(`Server running this port: http://localhost:${PORT}`);
-});
+let streamConnected = new Set();
+io.on('connection', onConnected);
+
+function onConnected(stream) {
+    console.log('Stream connect :', stream.id);
+    streamConnected.add(stream.id);
+
+    io.emit('total-clients', streamConnected.size);
+
+    stream.on('disconnect', () => {
+        console.log('Stream disconnect :', stream.id);
+        streamConnected.delete(stream.id);
+        io.emit('total-clients', streamConnected.size);
+    })
+}
