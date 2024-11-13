@@ -113,3 +113,12 @@ body{
     margin-top: 10px;
     color: #bbb;
 }
+@media screen and (min-width: 20rem) and (max-width: 30rem){
+    .heading{
+        margin: 1rem 0;
+    }
+    .message-container{
+        width: 100%;
+        height: calc(100vh / 1.5);
+    }
+}
