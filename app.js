@@ -1,42 +1,39 @@
 require("dotenv").config();
+const http = require("http");
 const express = require("express");
 const path = require("path");
-const app = express();
+const { Server } = require("socket.io");
 const PORT = process.env.PORT || 3001;
 
-const server = app.listen(PORT, () => { console.log(`Server running this port: http://localhost:${PORT}`); });
-const io = require("socket.io")(server, {
-    cors: {
-      origin: "*", // Update this to your domain in production
-      methods: ["GET", "POST"]
-    }
-});
-  
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+let socketConnected = new Set();
+// socket.io
+io.on('connection', onConnected);
+
+function onConnected(socket) {
+    socketConnected.add(socket.id);
+
+    io.emit('total-clients', socketConnected.size);
+
+    socket.on('message', (data) => {
+        socket.broadcast.emit('chat-message', data)
+    })
+
+    socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', data)
+    })
+
+    socket.on('disconnect', () => {
+        socketConnected.delete(socket.id);
+        io.emit('total-clients', socketConnected.size);
+    })
+}
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-let streamConnected = new Set();
-io.on('connection', onConnected);
-
-function onConnected(stream) {
-    // console.log('Stream connect :', stream.id);
-    streamConnected.add(stream.id);
-
-    io.emit('total-clients', streamConnected.size);
-
-    stream.on('message', (data) => {
-        // console.log(data);
-        stream.broadcast.emit('chat-message', data)
-    })
-
-    stream.on('typing', (data) => {
-        // console.log(data);
-        stream.broadcast.emit('typing', data)
-    })
-
-    stream.on('disconnect', () => {
-        // console.log('Stream disconnect :', stream.id);
-        streamConnected.delete(stream.id);
-        io.emit('total-clients', streamConnected.size);
-    })
-}
+server.listen(PORT, () => { 
+    console.log(`Server running this port: http://localhost:${PORT}`); 
+});

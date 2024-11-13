@@ -1,5 +1,9 @@
 const socket = io();
 
+socket.on('connect', () => {
+    console.log('Socket connected to the server..');
+});
+
 const totalClients = document.getElementById("total-clients");
 const messageContainer = document.getElementById("message-container");
 const nameInput = document.getElementById("name-input");
@@ -20,7 +24,7 @@ function sendMessage() {
     const data = {
         name: nameInput.value,
         message: messageInput.value,
-        dateTime: new Date()
+        dateTime: new Date().toLocaleString()
     }
 
     socket.emit('message', data);
