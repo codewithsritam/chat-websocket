@@ -7,7 +7,9 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    path: '/api/socket.io'  // Adjust the path to work with Vercel functions
+});
 
 let socketConnected = new Set();
 // socket.io
