@@ -9,31 +9,32 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+let socketConnected = new Set(); // To Track connected user
+// socket.io
+io.on('connection', onConnected);
 
-// try on github code 
-io.on('connection', (socket) => {
- console.log('user connected: ', socket.id);
+async function onConnected(socket) {
+    socketConnected.add(socket.id);
 
-socket.on('message', (data) => {
-socket.broadcast.emit('chat-message', data)
-})
+    io.emit('total-clients', socketConnected.size);
 
-socket.on('typing', (data) => {
+    socket.on('message', (data) => {
+        socket.broadcast.emit('chat-message', data)
+    })
+
+    socket.on('typing', (data) => {
         socket.broadcast.emit('typing', data)
     })
 
     socket.on('disconnect', () => {
         socketConnected.delete(socket.id);
         io.emit('total-clients', socketConnected.size);
-});
-
-
-
-
+    })
+}
 
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-server.listen(PORT, () => { 
-    console.log(`Server running this port: http://localhost:${PORT}`); 
+server.listen(PORT, () => {
+    console.log(`Server running this port: http://localhost:${PORT}`);
 });

@@ -49,6 +49,7 @@ body{
     overflow-y: scroll;
     overflow-x: hidden;
     padding: 12px;
+    list-style: none;
 }
 .message-container::-webkit-scrollbar{
     display: none;
@@ -63,7 +64,6 @@ body{
 .message-right{
     padding: 10px;
     max-width: fit-content;
-    list-style: none;
     font-size: 18px;
     margin: 1rem 0;
 }
