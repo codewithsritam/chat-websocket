@@ -30,28 +30,7 @@ socket.on('typing', (data) => {
 
 
 
-let socketConnected = new Set();
-// socket.io
-io.on('connection', onConnected);
 
-function onConnected(socket) {
-    socketConnected.add(socket.id);
-
-    io.emit('total-clients', socketConnected.size);
-
-    socket.on('message', (data) => {
-        socket.broadcast.emit('chat-message', data)
-    })
-
-    socket.on('typing', (data) => {
-        socket.broadcast.emit('typing', data)
-    })
-
-    socket.on('disconnect', () => {
-        socketConnected.delete(socket.id);
-        io.emit('total-clients', socketConnected.size);
-    })
-}
 
 app.use(express.static(path.join(__dirname, 'public')));
 
