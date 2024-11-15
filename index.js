@@ -9,6 +9,27 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+
+// try on github code 
+io.on('connection', (socket) => {
+ console.log('user connected: ', socket.id);
+
+socket.on('message', (data) => {
+socket.broadcast.emit('chat-message', data)
+})
+
+socket.on('typing', (data) => {
+        socket.broadcast.emit('typing', data)
+    })
+
+    socket.on('disconnect', () => {
+        socketConnected.delete(socket.id);
+        io.emit('total-clients', socketConnected.size);
+});
+
+
+
+
 let socketConnected = new Set();
 // socket.io
 io.on('connection', onConnected);
