@@ -1,7 +1,7 @@
 const socket = io();
-
+console.log("client side id :", socket)
 socket.on('connect', () => {
-    console.log('Socket connected to the server..');
+    console.log(`Socket connected to the server..`);
 });
 
 const totalClients = document.getElementById("total-clients");
@@ -32,10 +32,16 @@ function sendMessage() {
     messageInput.value = '';
 }
 
+socket.on('loadOldMessages', (messages) => {
+    messages.forEach((message) => {
+        addMessageToUI(false, message);
+    })
+});
+
 socket.on('chat-message', (data) => {
     // console.log(data)
     addMessageToUI(false, data);
-})
+});
 
 function addMessageToUI(isOwnMessage, data) {
     clearTyping();
