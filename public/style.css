@@ -10,6 +10,7 @@ body{
     display: grid;
     place-content: center;
     background-color: #ebebeb;
+    height: 100vh;
 }
 .heading,
 .message-typing{
@@ -120,5 +121,8 @@ body{
     .message-container{
         width: 100%;
         height: calc(100vh / 1.5);
+    }
+    .message-form{
+        width: 100%;
     }
 }
