@@ -10,30 +10,50 @@
     <link rel="shortcut icon" href="chat.png" type="image/x-icon">
 </head>
 <body>
-    <h1 class="heading">
-        iChat 
-        <span><i class="fa-regular fa-comment-dots"></i></span>
-    </h1>
-    <div class="main">
-        <div class="name">
-            <span><i class="fa-regular fa-user"></i></span>
-            <input type="text" class="name-input" id="name-input" value="anonymous" maxlength="20">
-        </div>
+    <div class="login-container">
+        <h1>Login</h1>
+        <p>Hi, Welcome Back <i class="fa-solid fa-hands-clapping"></i></p>
+        <form class="login-form fColumn" id="login-form" autocomplete="off">
+            <div class="fColumn">
+                <label for="name-input">Name</label>
+                <input type="text" name="name" id="name-input" class="name-input" placeholder="Name">
+            </div>
+            <div class="fColumn">
+                <label for="phone-input">Phone</label>
+                <input type="text" name="phone" id="phone-input" class="phone-input" placeholder="Phone">
+            </div>
 
-        <ul class="message-container" id="message-container"></ul>
-
-        <form class="message-form" id="message-form" autocomplete="off">
-            <input type="text" name="message" id="message-input" class="message-input" placeholder="Message">
-            <div class="v-divider"></div>
-            <button type="submit" class="send-button">
-                send
-                <i class="fa-solid fa-paper-plane"></i>
+            <button type="submit" class="login-button">
+                Login
             </button>
         </form>
     </div>
-    <h3 class="total-clients" id="total-clients">Total clients: 0</h3>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="main.js"></script>
+    <script>
+        const loginForm = document.getElementById("login-form");
+        
+        loginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(loginForm);
+            formData.append('dateTime', new Date().toLocaleString());
+            const jsonData = Object.fromEntries(formData.entries());
+
+            fetch('http://localhost:3000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then((data) => {
+                console.log(data);
+                window.location.href = 'main.html'
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        });
+    </script>
 </body>
 </html>

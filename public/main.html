@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible", content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iChat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="chat.png" type="image/x-icon">
+</head>
+<body>
+    <h1 class="heading">
+        iChat 
+        <span><i class="fa-regular fa-comment-dots"></i></span>
+    </h1>
+    <div class="main">
+        <div class="name">
+            <span><i class="fa-regular fa-user"></i></span>
+            <input type="text" class="name-input" id="name-input" value="anonymous" maxlength="20">
+        </div>
+
+        <ul class="message-container" id="message-container"></ul>
+
+        <form class="message-form" id="message-form" autocomplete="off">
+            <input type="text" name="message" id="message-input" class="message-input" placeholder="Message">
+            <div class="v-divider"></div>
+            <button type="submit" class="send-button">
+                send
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+    <h3 class="total-clients" id="total-clients">Total clients: 0</h3>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -2,6 +2,7 @@ require("dotenv").config();
 const http = require("http");
 const express = require("express");
 const path = require("path");
+const bodyParser = require("body-parser");
 const { Server } = require("socket.io");
 const PORT = process.env.PORT || 3001;
 const connectDB = require("./src/config/connect-with-mongodb");
@@ -9,17 +10,24 @@ const connectDB = require("./src/config/connect-with-mongodb");
 // connect message model
 const Message = require("./src/model/message.model");
 
+// Login Routes
+const LoginRoutes = require("./src/routes/login.routes");
+
 // Initialize Express app
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
 // Middleware for parsing JSON
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // Call mongodb connection
 connectDB();
+
+// Call login routes
+app.use("/login", LoginRoutes);
 
 
 // socket.io
