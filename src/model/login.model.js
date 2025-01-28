@@ -7,7 +7,6 @@ const loginSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    dateTime: String
 });
 
 module.exports = mongoose.model("Users", loginSchema);

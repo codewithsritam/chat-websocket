@@ -13,14 +13,14 @@
     <div class="login-container">
         <h1>Login</h1>
         <p>Hi, Welcome Back <i class="fa-solid fa-hands-clapping"></i></p>
-        <form class="login-form fColumn" id="login-form" autocomplete="off">
+        <form class="login-form fColumn" id="Login" autocomplete="off">
             <div class="fColumn">
-                <label for="name-input">Name</label>
-                <input type="text" name="name" id="name-input" class="name-input" placeholder="Name">
+                <label for="Name">Name</label>
+                <input type="text" name="name" id="Name" class="name-input" placeholder="Name">
             </div>
             <div class="fColumn">
-                <label for="phone-input">Phone</label>
-                <input type="text" name="phone" id="phone-input" class="phone-input" placeholder="Phone">
+                <label for="Phone">Phone</label>
+                <input type="text" name="phone" id="Phone" class="phone-input" placeholder="Phone">
             </div>
 
             <button type="submit" class="login-button">
@@ -29,7 +29,10 @@
         </form>
     </div>
 
-    <script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+
+    <!-- <script>
         const loginForm = document.getElementById("login-form");
         
         loginForm.addEventListener("submit", (e) => {
@@ -47,13 +50,12 @@
                 body: JSON.stringify(jsonData)
             })
             .then((data) => {
-                console.log(data);
                 window.location.href = 'main.html'
             })
             .catch((err) => {
                 console.log(err);
             })
         });
-    </script>
+    </script> -->
 </body>
 </html>
