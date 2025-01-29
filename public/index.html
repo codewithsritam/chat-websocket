@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible", content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" , content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iChat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="chat.png" type="image/x-icon">
 </head>
+
 <body>
     <div class="login-container">
         <h1>Login</h1>
@@ -30,7 +34,20 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="main.js"></script>
+    <script>
+        const socket = io();
+        
+        const loginForm = document.getElementById("Login");
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById("Name").value || 'Anonymous';
+            const phone = document.getElementById("Phone").value;
+            socket.emit('login', { name, phone }, (response) => {
+                window.location.href = '/main.html';
+                localStorage.setItem('user', JSON.stringify(response.user));
+            });
+        });
+    </script>
 
     <!-- <script>
         const loginForm = document.getElementById("login-form");
@@ -58,4 +75,5 @@
         });
     </script> -->
 </body>
+
 </html>

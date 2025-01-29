@@ -43,35 +43,35 @@ async function onConnected(socket) {
     io.emit('total-clients', socketConnected.size);
 
     // 1. Handle login/signup
-    socket.on('login', async ({ name = 'Anonymous', phone }) => {
+    socket.on('login', async ({ name, phone }, cb) => {
         try {
             let user = await User.findOne({ phone });
 
             if (user) {
-                // login success
-                socket.emit('login-success', user);
+                // Login existing user
+                cb({ success: true, message: 'Login success', user });
             } else {
                 // Create new user
                 user = new User({ name, phone, dateTime: new Date().toLocaleString() });
                 await user.save();
-                socket.emit('login-success', user);
+                cb({ success: true, message: 'Account created successfully', user });
             }
         } catch (error) {
-            socket.emit('login-success', error);
+            cb({ success: false, message: 'Error logging in', error });
         }
     });
 
     // 2. Show profile
-    socket.on('getProfile', async (userId) => {
+    socket.on('getProfile', async ({ userId }, cb) => {
         try {
             const user = await User.findById(userId);
 
             if (!user) {
-                return socket.emit('showProfile', { error: 'User not found' });
+                return cb({ success: false, message: 'User not found' });
             }
-            socket.emit('showProfile', user);
+            cb({ success: true, message: 'User found', user });
         } catch (error) {
-            socket.emit('showProfile', error);
+            cb({ success: false, message: 'Error fetching user', error });
         }
     });
 
@@ -89,20 +89,20 @@ async function onConnected(socket) {
     });
 
     // 4. Save and send messages
-    socket.on('sendMessage', async (from, to, message, dateTime) => {
+    socket.on('sendMessage', async ({ from, to, message, dateTime }, cb) => {
         try {
             const newMessage = new Message({ from, to, message, dateTime });
             await newMessage.save();
-            // Notify the receiver in real time
-            socket.to(to).emit('newMessage', newMessage);
-            socket.broadcast.emit('chat-message', data)
+            
+            socket.to(to).emit('newMessage', newMessage); // Notify the receiver in real time
+            cb({ success: true, message: 'Message sent successfully', newMessage });
         } catch (error) {
-            socket.emit('sendMessage', error);
+            cb({ success: false, message: 'Error sending message', error });
         }
     });
 
     // 5. Show messages between two users
-    socket.on('getMessages', async (from, to) => {
+    socket.on('getMessages', async ({ from, to }, cb) => {
         try {
             const messages = await Message.find({
                 $or: [
@@ -110,9 +110,9 @@ async function onConnected(socket) {
                     { from: to, to: from }
                 ]
             }).sort({ dateTime: 1 });
-            socket.emit('getMessages', messages);
+            cb({ success: true, message: 'Messages found', messages });
         } catch (error) {
-            socket.emit('getMessages', error);
+            cb({ success: false, message: 'Error fetching messages', error });
         }
     });
 

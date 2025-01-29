@@ -11,24 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageForm = document.getElementById("message-form");
     const messageInput = document.getElementById("message-input");
 
-    // Login
-    const loginForm = document.getElementById("Login");
+    const userName = document.getElementById("user-name");
+    const userNumber = document.getElementById("user-number");
 
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = document.getElementById("Name").value;
-        const phone = document.getElementById("Phone").value;
-        socket.emit('login', {
-            name,
-            phone
-        });
-        window.location.href = '/main.html';
-    });
-
-    // Login success
-    socket.on('login-success', (user) => {
-        console.log("login-success:", user);
-    });
+    // Get item from local storage
+    const user = JSON.parse(localStorage.getItem('user'));
+    userName.innerText = user.name;
+    userNumber.innerText = user.phone;
 
     messageForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -41,14 +30,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sendMessage() {
         if (messageInput.value === '') return;
-        const data = {
-            name: nameInput.value,
-            message: messageInput.value,
-            dateTime: new Date().toLocaleString()
-        }
 
-        socket.emit('sendMessage', data);
-        addMessageToUI(true, data);
+        const from = user._id;
+        const to = '6798f632c9b53b18b6dd8db9';
+        const message = messageInput.value;
+        const dateTime = new Date().toLocaleString();
+
+        socket.emit('sendMessage', { from, to, message, dateTime }, (response) => {
+            console.log('Message sent:', response.newMessage);
+            addMessageToUI(true, response);
+        });
+        
         messageInput.value = '';
     }
 
@@ -65,25 +57,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function addMessageToUI(isOwnMessage, data) {
+        console.log('isOwnMessage:', data);
         clearTyping();
         const element = `<li class="${isOwnMessage ? 'message-left' : 'message-right'}">
-                <p>${data.message}</p>
-                <span>${data.name} &#x2022; ${data.dateTime}</span>
+                <p>${data.newMessage.message}</p>
+                <span>${data.newMessage.from} &#x2022; ${data.newMessage.dateTime}</span>
             </li>
     `
         messageContainer.innerHTML += element;
         scrollToBottom();
     }
 
+    // While user focus on input field
     messageInput.addEventListener('focus', (e) => {
         socket.emit('typing', {
-            typing: `${nameInput.value} is typing a message...`
+            typing: `${user.name} is typing a message...`
         })
     });
 
+    // While user keypress on input field
     messageInput.addEventListener('keypress', (e) => {
         socket.emit('typing', {
-            typing: `${nameInput.value} is typing a message...`
+            typing: `${user.name} is typing a message...`
         })
     });
 

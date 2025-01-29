@@ -32,6 +32,16 @@ body{
 .name > span{
     color: #bbb;
 }
+#user-name,
+#user-number {
+    font-size: 16px;
+    font-weight: 500;
+    color: #7e7e7e;
+    border: none;
+    outline: none;
+    margin: 0 12px;
+    background-color: #ebebeb;
+}
 .name-input{
     font-size: 24px;
     font-weight: 700;
