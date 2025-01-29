@@ -52,7 +52,7 @@
             const tableBody = document.getElementById('table-body');
             tableBody.innerHTML = '';
 
-            users.friends.forEach(user => {
+            users.friends || [].forEach(user => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${user.id}</td>

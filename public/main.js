@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     userName.innerText = toUser.name;
     userNumber.innerText = toUser.phone;
 
+    const from = fromUser._id;
+    const to = toUser.id;
+
     messageForm.addEventListener('submit', (e) => {
         e.preventDefault();
         sendMessage();
@@ -32,8 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendMessage() {
         if (messageInput.value === '') return;
 
-        const from = fromUser._id;
-        const to = toUser._id;
         const message = messageInput.value;
         const dateTime = new Date().toLocaleString();
 
@@ -45,10 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
         messageInput.value = '';
     }
 
-    socket.on('loadOldMessages', (messages) => {
-        messages.forEach((message) => {
-            console.log(message)
-            addMessageToUI(false, message);
+    socket.emit('getMessages', { from, to }, (response) => {
+        response.newMessage.forEach((message) => {
+            console.log('message: ', message);
+            const newMessage = message
+            addMessageToUI(false, newMessage);
         })
     });
 
@@ -72,14 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // While user focus on input field
     messageInput.addEventListener('focus', (e) => {
         socket.emit('typing', {
-            typing: `${user.name} is typing a message...`
+            typing: `${fromUser.name} is typing a message...`
         })
     });
 
     // While user keypress on input field
     messageInput.addEventListener('keypress', (e) => {
         socket.emit('typing', {
-            typing: `${user.name} is typing a message...`
+            typing: `${fromUser.name} is typing a message...`
         })
     });
 

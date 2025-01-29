@@ -122,7 +122,7 @@ async function onConnected(socket) {
                     { from: to, to: from }
                 ]
             }).sort({ dateTime: 1 });
-            cb({ success: true, message: 'Messages found', messages });
+            cb({ success: true, message: 'Messages found', newMessage: messages });
         } catch (error) {
             cb({ success: false, message: 'Error fetching messages', error });
         }
