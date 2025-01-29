@@ -30,6 +30,8 @@ connectDB();
 // Call login routes
 app.use("/login", LoginRoutes);
 
+// Track connected users
+const users = new Map(); // userId -> socket.id mapping
 
 // socket.io
 let socketConnected = new Set(); // To Track connected socket
@@ -41,6 +43,15 @@ async function onConnected(socket) {
 
     // Emit total clients
     io.emit('total-clients', socketConnected.size);
+
+    // **Handle User Join Room**
+    socket.on('joinRoom', ({ userId }) => {
+        if (!userId) return;
+        
+        socket.join(userId);
+        users.set(userId, socket.id);
+        console.log(`User ${userId} joined room: ${userId}`);
+    });
 
     // 1. Handle login/signup
     socket.on('login', async ({ name, phone }, cb) => {
@@ -118,7 +129,9 @@ async function onConnected(socket) {
             const newMessage = new Message({ from, to, message, dateTime });
             await newMessage.save();
 
-            socket.to(to).emit('newMessage', newMessage); // Notify the receiver in real time
+            // Emit to sender and receiver in their respective rooms
+            io.to(from).emit('newMessage', newMessage);  // Notify sender
+            io.to(to).emit('newMessage', newMessage);    // Notify receiver
             cb({ success: true, message: 'Message sent successfully', newMessage });
         } catch (error) {
             cb({ success: false, message: 'Error sending message', error });
