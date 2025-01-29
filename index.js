@@ -64,23 +64,35 @@ async function onConnected(socket) {
     // 2. Get Users
     socket.on('getUsers', async ({ userId }, cb) => {
         try {
-            const users = await Message.find({ from: userId })
+            const users = await Message.find({
+                $or: [
+                    { from: userId },
+                    { to: userId }
+                ]
+            })
+                .populate('from')
                 .populate('to')
                 .lean();
-                
+
             if (!users || users.length === 0) {
                 return cb({ success: false, message: 'Users are not found' });
             }
 
+            // Filter friends based on whether the message was sent or received
             const userFriends = [
-                ...new Map(users.map((user) => [user.to._id, {
-                    _id: user.to._id,
-                    name: user.to.name,
-                    phone: user.to.phone,
-                    dateTime: user.dateTime
-                }])).values()
+                ...new Map(users.map((user) => {
+                    // Determine the friend based on whether the user is 'from' or 'to'
+                    const friend = user.from._id.toString() === userId.toString() ? user.to : user.from;
+
+                    return [friend._id.toString(), {
+                        _id: friend._id,
+                        name: friend.name,
+                        phone: friend.phone,
+                        dateTime: user.dateTime
+                    }];
+                })).values()
             ];
-            
+
             cb({ success: true, message: 'User found', friends: userFriends });
         } catch (error) {
             cb({ success: false, message: 'Error fetching users', error });
@@ -105,7 +117,7 @@ async function onConnected(socket) {
         try {
             const newMessage = new Message({ from, to, message, dateTime });
             await newMessage.save();
-            
+
             socket.to(to).emit('newMessage', newMessage); // Notify the receiver in real time
             cb({ success: true, message: 'Message sent successfully', newMessage });
         } catch (error) {
