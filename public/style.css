@@ -51,6 +51,11 @@ body{
     margin: 0 12px;
     background-color: #ebebeb;
 }
+
+/* Seaerch css */
+#table-body tr{
+    cursor: pointer;
+}
 .message-container{
     display: flex;
     flex-direction: column;

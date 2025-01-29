@@ -43,37 +43,11 @@
             const name = document.getElementById("Name").value || 'Anonymous';
             const phone = document.getElementById("Phone").value;
             socket.emit('login', { name, phone }, (response) => {
-                window.location.href = '/main.html';
-                localStorage.setItem('user', JSON.stringify(response.user));
+                localStorage.setItem('from', JSON.stringify(response.user));
+                window.location.href = '/profile.html';
             });
         });
     </script>
-
-    <!-- <script>
-        const loginForm = document.getElementById("login-form");
-        
-        loginForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const formData = new FormData(loginForm);
-            formData.append('dateTime', new Date().toLocaleString());
-            const jsonData = Object.fromEntries(formData.entries());
-
-            fetch('http://localhost:3000/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(jsonData)
-            })
-            .then((data) => {
-                window.location.href = 'main.html'
-            })
-            .catch((err) => {
-                console.log(err);
-            })
-        });
-    </script> -->
 </body>
 
 </html>

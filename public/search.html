@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" , content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iChat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="chat.png" type="image/x-icon">
+</head>
+
+<body>
+    <div class="login-container">
+        <h1>Search...</h1>
+        <p>Hi, Welcome Back <i class="fa-solid fa-hands-clapping"></i></p>
+        <form class="login-form fColumn" id="Login" autocomplete="off">
+            <div class="fColumn">
+                <label for="Phone">Searching..</label>
+                <input type="text" name="phone" id="Phone" class="name-input" placeholder="Write here...">
+            </div>
+
+            <button type="submit" class="login-button">
+                Search
+            </button>
+        </form>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>NAME</th>
+                                <th>PHONE</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <!-- <tr>
+                                <td>John Doe</td>
+                                <td>08012345678</td>
+                                <td>12:00 PM</td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const loginForm = document.getElementById("Login");
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phone = document.getElementById("Phone").value;
+            socket.emit('searchUser', { phone }, (response) => {
+
+                const tableBody = document.getElementById('table-body');
+                tableBody.innerHTML = '';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${response.user._id}</td>
+                    <td>${response.user.name}</td>
+                    <td>${response.user.phone}</td>
+                `;
+                tableBody.appendChild(tr);
+
+                tr.addEventListener('click', () => {
+                    localStorage.setItem('to', JSON.stringify(response.user));
+                    window.location.href = '/main.html';
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>

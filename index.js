@@ -61,30 +61,42 @@ async function onConnected(socket) {
         }
     });
 
-    // 2. Show profile
-    socket.on('getProfile', async ({ userId }, cb) => {
+    // 2. Get Users
+    socket.on('getUsers', async ({ userId }, cb) => {
         try {
-            const user = await User.findById(userId);
+            const users = await Message.find({ from: userId })
+                .populate('to')
+                .lean();
+            if (!users || users.length === 0) {
+                return cb({ success: false, message: 'Users are not found' });
+            }
 
+            const userFriends = [
+                ...new Map(users.map((user) => [user.to._id, {
+                    id: user.to._id,
+                    name: user.to.name,
+                    phone: user.to.phone,
+                    dateTime: user.dateTime
+                }])).values()
+            ];
+            
+            cb({ success: true, message: 'User found', friends: userFriends });
+        } catch (error) {
+
+            cb({ success: false, message: 'Error fetching users', error });
+        }
+    });
+
+    // 3. Search user by phone number
+    socket.on('searchUser', async ({ phone }, cb) => {
+        try {
+            const user = await User.findOne({ phone });
             if (!user) {
                 return cb({ success: false, message: 'User not found' });
             }
             cb({ success: true, message: 'User found', user });
         } catch (error) {
-            cb({ success: false, message: 'Error fetching user', error });
-        }
-    });
-
-    // 3. Search user by phone number
-    socket.on('searchUser', async (phone) => {
-        try {
-            const user = await User.findOne({ phone });
-            if (!user) {
-                return socket.emit('searchUser', { error: 'User not found' });
-            }
-            socket.emit('searchUser', user);
-        } catch (error) {
-            socket.emit('searchUser', error);
+            cb({ success: false, message: 'Error searching user', error });
         }
     });
 

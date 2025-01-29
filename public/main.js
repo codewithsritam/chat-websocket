@@ -15,9 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const userNumber = document.getElementById("user-number");
 
     // Get item from local storage
-    const user = JSON.parse(localStorage.getItem('user'));
-    userName.innerText = user.name;
-    userNumber.innerText = user.phone;
+    const fromUser = JSON.parse(localStorage.getItem('from'));
+    const toUser = JSON.parse(localStorage.getItem('to'));
+    userName.innerText = toUser.name;
+    userNumber.innerText = toUser.phone;
 
     messageForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -31,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function sendMessage() {
         if (messageInput.value === '') return;
 
-        const from = user._id;
-        const to = '6798f632c9b53b18b6dd8db9';
+        const from = fromUser._id;
+        const to = toUser._id;
         const message = messageInput.value;
         const dateTime = new Date().toLocaleString();
 
