@@ -67,13 +67,14 @@ async function onConnected(socket) {
             const users = await Message.find({ from: userId })
                 .populate('to')
                 .lean();
+                
             if (!users || users.length === 0) {
                 return cb({ success: false, message: 'Users are not found' });
             }
 
             const userFriends = [
                 ...new Map(users.map((user) => [user.to._id, {
-                    id: user.to._id,
+                    _id: user.to._id,
                     name: user.to.name,
                     phone: user.to.phone,
                     dateTime: user.dateTime
@@ -82,7 +83,6 @@ async function onConnected(socket) {
             
             cb({ success: true, message: 'User found', friends: userFriends });
         } catch (error) {
-
             cb({ success: false, message: 'Error fetching users', error });
         }
     });

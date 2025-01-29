@@ -17,11 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get item from local storage
     const fromUser = JSON.parse(localStorage.getItem('from'));
     const toUser = JSON.parse(localStorage.getItem('to'));
+    console.log('to:', toUser);
     userName.innerText = toUser.name;
     userNumber.innerText = toUser.phone;
 
     const from = fromUser._id;
-    const to = toUser.id;
+    const to = toUser._id;
 
     messageForm.addEventListener('submit', (e) => {
         e.preventDefault();

@@ -15,7 +15,10 @@
 
 <body>
     <div class="login-container">
-        <h2>Chats</h2>
+        <div class="flex-row">
+            <h2>Chats</h2>
+            <a href="/search.html" class="btn"><i class="fa-solid fa-magnifying-glass-plus"></i></a>
+        </div>
 
         <div class="row">
             <div class="col-md-12">
@@ -52,10 +55,11 @@
             const tableBody = document.getElementById('table-body');
             tableBody.innerHTML = '';
 
-            users.friends || [].forEach(user => {
+            (users.friends || []).forEach(user => {
+                console.log('user: ', user);
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${user.id}</td>
+                    <td>${user._id}</td>
                     <td>${user.name}</td>
                     <td>${user.phone}</td>
                 `;
