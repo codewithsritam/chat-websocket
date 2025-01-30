@@ -148,7 +148,7 @@ body{
 
 /* Login */
 .login-container p{
-    margin-top: 8px;
+    margin-top: 6px;
     opacity: .7;
 }
 .login-container{
@@ -192,4 +192,32 @@ body{
     color: #fff;
     font-size: 20px;
     cursor: pointer;
+}
+
+/* Profile */
+.borderBtm {
+    border-bottom: 1px solid #dddddd;
+    padding-bottom: 1rem;
+}
+.chatContainer{
+    margin-top: 2rem;
+}
+.center{
+    border: none;
+    border-radius: 4px;
+    padding: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1AD1A0;
+}
+.chatBoxItem{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: .5px solid #dddddd;
+    padding: 6px;
+    border-radius: 4px;
 }

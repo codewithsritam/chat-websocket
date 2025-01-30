@@ -15,66 +15,64 @@
 
 <body>
     <div class="login-container">
-        <div class="flex-row">
-            <h2>Chats</h2>
-            <a href="/search.html" class="btn"><i class="fa-solid fa-magnifying-glass-plus"></i></a>
+        <div class="flex-row borderBtm">
+            <h2 class="profileName"></h2>
+            <a href="/search.html" class="btn"><i class="fa-solid fa-magnifying-glass fa-xl"
+                    style="color: #000000;"></i></a>
         </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>NAME</th>
-                                <th>PHONE</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-body">
-                            <!-- <tr>
-                                <td>John Doe</td>
-                                <td>08012345678</td>
-                                <td>12:00 PM</td>
-                            </tr> -->
-                        </tbody>
-                    </table>
+        <div class="chatContainer">
+            <h3 class="center">Chats</h3>
+
+            <div class="chatBox">
+                <div class="chatBoxItem">
+                    <div>
+                        <h4>John Doe</h4>
+                        <p>Hi, How are you?</p>
+                    </div>
+                    <i class="fa-solid fa-arrow-right fa-xl" style="color: #000000;"></i>
                 </div>
             </div>
+
         </div>
-    </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io();
 
-        const fromUser = JSON.parse(localStorage.getItem('from'));
-        const userId = fromUser._id;
+            const profileName = document.querySelector('.profileName');
+            const fromUser = JSON.parse(localStorage.getItem('from'));
+            const userId = fromUser._id;
+            profileName.innerHTML = fromUser.name;
 
-        socket.emit('getUsers', { userId }, (users) => {
-            const tableBody = document.getElementById('table-body');
-            tableBody.innerHTML = '';
+            socket.emit('getUsers', { userId }, (users) => {
+                const chatBox = document.querySelector('.chatBox');
+                chatBox.innerHTML = ''; // Clear existing content
 
-            (users.friends || []).forEach(user => {
-                console.log('user: ', user);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${user._id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.phone}</td>
-                `;
-                tableBody.appendChild(tr);
+                (users.friends || []).forEach(user => {
+                    // Create chatBox item
+                    const chatBoxItem = document.createElement('div');
+                    chatBoxItem.classList.add('chatBoxItem');
+                    chatBoxItem.innerHTML = `
+                        <div>
+                            <h4>${user.name}</h4>
+                            <p>${user.phone}</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-right fa-xl" style="color: #000000;"></i>
+                    `;
 
-                // re-save to data from localstorage to key
-                tr.addEventListener('click', () => {
-                    localStorage.setItem('to', JSON.stringify(user));
-                    window.location.href = '/main.html';
+                    // Append elements to chatBox
+                    chatBox.appendChild(chatBoxItem);
+
+                    // Attach event listener to chatBoxItem
+                    chatBoxItem.addEventListener('click', () => {
+                        localStorage.setItem('to', JSON.stringify(user));
+                        window.location.href = '/main.html';
+                    });
                 });
             });
 
-        });
-
-    </script>
+        </script>
 </body>
 
 </html>
