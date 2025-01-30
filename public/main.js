@@ -50,7 +50,11 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.emit('getMessages', { from, to }, (response) => {
         if (response.success) {
             response.newMessage.forEach((message) => {
-                addMessageToUI(false, message);
+                if (message.from === from) {
+                    addMessageToUI(true, message);
+                } else {
+                    addMessageToUI(false, message);
+                }
             });
         }
     });

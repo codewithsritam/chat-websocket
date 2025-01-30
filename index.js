@@ -129,9 +129,11 @@ async function onConnected(socket) {
             const newMessage = new Message({ from, to, message, dateTime });
             await newMessage.save();
 
-            // Emit to sender and receiver in their respective rooms
-            io.to(from).emit('newMessage', newMessage);  // Notify sender
-            io.to(to).emit('newMessage', newMessage);    // Notify receiver
+            // Emit to receiver only if online
+            if (users.has(to)) {
+                io.to(to).emit('newMessage', newMessage);
+            }
+
             cb({ success: true, message: 'Message sent successfully', newMessage });
         } catch (error) {
             cb({ success: false, message: 'Error sending message', error });
