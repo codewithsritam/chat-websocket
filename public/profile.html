@@ -23,37 +23,28 @@
 
         <div class="chatContainer">
             <h3 class="center">Chats</h3>
-
-            <div class="chatBox">
-                <div class="chatBoxItem">
-                    <div>
-                        <h4>John Doe</h4>
-                        <p>Hi, How are you?</p>
-                    </div>
-                    <i class="fa-solid fa-arrow-right fa-xl" style="color: #000000;"></i>
-                </div>
-            </div>
-
+            <div class="chatBox"></div>
         </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
 
-        <script src="/socket.io/socket.io.js"></script>
-        <script>
-            const socket = io();
+        const profileName = document.querySelector('.profileName');
+        const fromUser = JSON.parse(localStorage.getItem('from'));
+        const userId = fromUser._id;
+        profileName.innerHTML = fromUser.name;
 
-            const profileName = document.querySelector('.profileName');
-            const fromUser = JSON.parse(localStorage.getItem('from'));
-            const userId = fromUser._id;
-            profileName.innerHTML = fromUser.name;
+        socket.emit('getUsers', { userId }, (users) => {
+            const chatBox = document.querySelector('.chatBox');
+            chatBox.innerHTML = ''; // Clear existing content
 
-            socket.emit('getUsers', { userId }, (users) => {
-                const chatBox = document.querySelector('.chatBox');
-                chatBox.innerHTML = ''; // Clear existing content
-
-                (users.friends || []).forEach(user => {
-                    // Create chatBox item
-                    const chatBoxItem = document.createElement('div');
-                    chatBoxItem.classList.add('chatBoxItem');
-                    chatBoxItem.innerHTML = `
+            (users.friends || []).forEach(user => {
+                // Create chatBox item
+                const chatBoxItem = document.createElement('div');
+                chatBoxItem.classList.add('chatBoxItem');
+                chatBoxItem.innerHTML = `
                         <div>
                             <h4>${user.name}</h4>
                             <p>${user.phone}</p>
@@ -61,18 +52,18 @@
                         <i class="fa-solid fa-arrow-right fa-xl" style="color: #000000;"></i>
                     `;
 
-                    // Append elements to chatBox
-                    chatBox.appendChild(chatBoxItem);
+                // Append elements to chatBox
+                chatBox.appendChild(chatBoxItem);
 
-                    // Attach event listener to chatBoxItem
-                    chatBoxItem.addEventListener('click', () => {
-                        localStorage.setItem('to', JSON.stringify(user));
-                        window.location.href = '/main.html';
-                    });
+                // Attach event listener to chatBoxItem
+                chatBoxItem.addEventListener('click', () => {
+                    localStorage.setItem('to', JSON.stringify(user));
+                    window.location.href = '/main.html';
                 });
             });
+        });
 
-        </script>
+    </script>
 </body>
 
 </html>
