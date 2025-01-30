@@ -42,15 +42,14 @@ body{
     margin: 0 12px;
     background-color: #ebebeb;
 }
-.name-input{
+/* .name-input{
     font-size: 24px;
     font-weight: 700;
     color: #7e7e7e;
     border: none;
     outline: none;
-    margin: 0 12px;
     background-color: #ebebeb;
-}
+} */
 
 /* Seaerch css */
 .flex-row {
@@ -164,6 +163,12 @@ body{
     display: flex;
     flex-direction: column;
 }
+.label{
+    font-size: 12px;
+    font-weight: 500;
+    color: #7e7e7e;
+    cursor: pointer;
+}
 .phone-input,
 .name-input{
     padding: 1rem;
@@ -171,6 +176,13 @@ body{
     border-radius: 4px;
     margin-top: 6px;
     font-size: 1rem;
+    background-color: #ebebeb;
+    font-weight: 600;
+}
+.phone-input::placeholder,
+.name-input::placeholder{
+    font-size: 14px;
+    color: #7e7e7e;
 }
 .login-button{
     background-color: #2d2d2d;
