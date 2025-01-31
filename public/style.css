@@ -134,12 +134,19 @@ body{
     color: #bbb;
 }
 @media screen and (min-width: 20rem) and (max-width: 30rem){
+    body{
+        display: unset;
+    }
+    .login-container{
+        width: 100% !important;
+        height: 100vh;
+    }
     .heading{
         margin: 1rem 0;
     }
     .message-container{
         width: 100%;
-        height: calc(100vh / 1.5);
+        height: calc(100vh / 1.2);
     }
     .message-form{
         width: 100%;
