@@ -171,8 +171,8 @@ body{
     flex-direction: column;
 }
 .label{
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     color: #7e7e7e;
     cursor: pointer;
 }
@@ -188,8 +188,10 @@ body{
 }
 .phone-input::placeholder,
 .name-input::placeholder{
-    font-size: 14px;
+    font-size: 12px;
+    font-style: italic;
     color: #7e7e7e;
+    opacity: 0.7;
 }
 .login-button{
     background-color: #2d2d2d;
