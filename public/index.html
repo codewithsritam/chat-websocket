@@ -28,7 +28,10 @@
             </div>
             <div class="fColumn">
                 <label for="Phone" class="label">Phone *</label>
-                <input type="number" name="phone" id="Phone" class="phone-input" placeholder="Phone">
+                <input type="tel" 
+                    name="phone" id="Phone" class="phone-input" 
+                    placeholder="Enter 10-digit phone number" 
+                    maxlength="10" pattern="[0-9]{10}" required>
             </div>
 
             <button type="submit" class="login-button">
@@ -44,8 +47,10 @@
         const loginForm = document.getElementById("Login");
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
+
             const name = document.getElementById("Name").value || 'Anonymous';
-            const phone = document.getElementById("Phone").value;
+            const phone = document.getElementById("Phone").value.trim();
+
             socket.emit('login', { name, phone }, (response) => {
                 localStorage.setItem('from', JSON.stringify(response.user));
                 window.location.href = '/profile.html';
